@@ -58,14 +58,14 @@ export const useMovieStore = defineStore('movie', {
     },
   },
   actions: {
-    async fetchMovies({ title, page }: { title: string; page: number }) {
+    async fetchMovies({ title, page }: { title: string; page?: number }) {
       const res = await axios.post('/api/fetchAPI', {
         path: `s=${title}&page=${page}`,
       })
       const { Search } = await res.data
       this.movies = Search
     },
-    async fetchMovieInfo({ id, plot = 'full' }: { id: string; plot: string }) {
+    async fetchMovieInfo({ id, plot = 'full' }: { id: string; plot?: string }) {
       const res = await axios.post('/api/fetchAPI', {
         path: `i=${id}&plot=${plot}`,
       })

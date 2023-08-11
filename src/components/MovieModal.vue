@@ -8,7 +8,17 @@ import TheIcon from '~/components/TheIcon.vue'
 const movieStore = useMovieStore()
 const route = useRoute()
 const router = useRouter()
-const info = ref({})
+const info = ref<{
+  Poster?: string
+  Title?: string
+  Plot?: string
+  Runtime?: string
+  Director?: string
+  Actors?: string
+  Writer?: string
+  Genre?: string
+  Type?: string
+}>({})
 const emit = defineEmits(['closeModal'])
 
 async function fetchInfo() {
