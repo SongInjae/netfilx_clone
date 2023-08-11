@@ -1,4 +1,6 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.node.json",
+  "include": ["vite.config.*", "vitest.config.*"],
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
@@ -6,5 +8,6 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts"],
+  "types": ["node"]
 }
