@@ -11,6 +11,7 @@ function searchMovies() {
 }
 function onReset() {
   title.value = ''
+  router.push('/')
 }
 </script>
 

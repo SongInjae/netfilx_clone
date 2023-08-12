@@ -8,14 +8,19 @@ import TheLoader from '~/components/TheLoader.vue'
 
 const showModal = ref(false)
 const fetchLoading = ref(false)
+const page = ref(1)
 
 const movieStore = useMovieStore()
 const router = useRouter()
 const route = useRoute()
 
-async function fetchAPI() {
+async function fetchAPI(check: boolean) {
   fetchLoading.value = true
-  await movieStore.fetchMovies({ title: String(route.query.q), page: 1 })
+  await movieStore.fetchMovies({
+    title: String(route.query.q),
+    page: page.value,
+    check,
+  })
   fetchLoading.value = false
 }
 if (route.query.jbv) showModal.value = true
@@ -28,21 +33,31 @@ async function goToMovieContent(id: string) {
 }
 router.afterEach((to, from) => {
   if (to.query.q !== from.query.q) {
-    fetchAPI()
+    fetchAPI(true)
+    page.value = 1
   }
 })
-fetchAPI()
+
+function handleScroll() {
+  const isScrollEnded =
+    window.innerHeight + window.scrollY + 100 >= document.body.offsetHeight
+
+  if (isScrollEnded && !fetchLoading.value) {
+    page.value += 1
+    fetchAPI(false)
+  }
+}
+
+window.addEventListener('scroll', handleScroll)
+
+fetchAPI(true)
 </script>
 
 <template>
-  <TheLoader v-if="movieStore.loading && fetchLoading" />
-  <div
-    v-else
-    class="content"
-  >
+  <div class="content">
     <ul class="content__grid">
       <li
-        v-for="movie in movieStore.filteredMovies"
+        v-for="movie in movieStore.movies"
         :key="movie.imdbID"
       >
         <img
@@ -58,6 +73,7 @@ fetchAPI()
       @close-modal="showModal = false"
     />
   </div>
+  <TheLoader v-if="movieStore.loading && fetchLoading" />
 </template>
 
 <style lang="scss" scoped>

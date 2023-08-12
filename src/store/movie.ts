@@ -47,19 +47,16 @@ export const useMovieStore = defineStore('movie', {
     movies: [] as Movies,
     movieInfo: {} as MovieInfo,
   }),
-  getters: {
-    filteredMovies(state) {
-      if (!state.movies) return
-      return state.movies
-        .map((movie) => ({
-          ...movie,
-          Year: movie.Year.slice(0, 4),
-        }))
-        .sort((a, b) => Number(b.Year) - Number(a.Year))
-    },
-  },
   actions: {
-    async fetchMovies({ title, page }: { title: string; page: number }) {
+    async fetchMovies({
+      title,
+      page,
+      check,
+    }: {
+      title: string
+      page: number
+      check: boolean
+    }) {
       if (this.loading) return
       this.loading = true
       try {
@@ -67,7 +64,16 @@ export const useMovieStore = defineStore('movie', {
           path: `s=${title}&page=${page}`,
         })
         const { Search } = await res.data
-        this.movies = Search
+        if (!Search) {
+          alert('마지막 페이지 입니다.')
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          })
+          return
+        }
+        if (check) this.movies = Search
+        else this.movies = this.movies.concat(Search)
       } catch (error) {
         console.error(error)
       } finally {
