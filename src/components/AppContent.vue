@@ -2,15 +2,22 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-import MovieModal from './MovieModal.vue'
-import { useMovieStore } from '../store/movie.ts'
+import MovieModal from '~/components/MovieModal.vue'
+import { useMovieStore } from '~/store/movie.ts'
+import TheLoader from '~/components/TheLoader.vue'
 
 const showModal = ref(false)
+const fetchLoading = ref(false)
+
 const movieStore = useMovieStore()
 const router = useRouter()
 const route = useRoute()
 
-movieStore.fetchMovies({ title: String(route.query.q), page: 1 })
+async function fetchAPI() {
+  fetchLoading.value = true
+  await movieStore.fetchMovies({ title: String(route.query.q), page: 1 })
+  fetchLoading.value = false
+}
 if (route.query.jbv) showModal.value = true
 
 async function goToMovieContent(id: string) {
@@ -19,10 +26,20 @@ async function goToMovieContent(id: string) {
   await router.push({ path: currentRoute.path, query: query })
   showModal.value = true
 }
+router.afterEach((to, from) => {
+  if (to.query.q !== from.query.q) {
+    fetchAPI()
+  }
+})
+fetchAPI()
 </script>
 
 <template>
-  <div class="content">
+  <TheLoader v-if="movieStore.loading && fetchLoading" />
+  <div
+    v-else
+    class="content"
+  >
     <ul class="content__grid">
       <li
         v-for="movie in movieStore.filteredMovies"

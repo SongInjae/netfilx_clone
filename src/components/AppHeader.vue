@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TheIcon from '~/components/TheIcon.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import TheIcon from '~/components/TheIcon.vue'
 
 const title = ref('')
 const router = useRouter()
@@ -18,7 +18,7 @@ function onReset() {
   <nav class="header">
     <div class="header__icon">
       <a
-        href="#"
+        href="/"
         class="header__icon--img"
       ></a>
     </div>

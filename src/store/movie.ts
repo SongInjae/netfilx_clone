@@ -43,6 +43,7 @@ interface MovieInfo {
 
 export const useMovieStore = defineStore('movie', {
   state: () => ({
+    loading: false as boolean,
     movies: [] as Movies,
     movieInfo: {} as MovieInfo,
   }),
@@ -58,18 +59,34 @@ export const useMovieStore = defineStore('movie', {
     },
   },
   actions: {
-    async fetchMovies({ title, page }: { title: string; page?: number }) {
-      const res = await axios.post('/api/fetchAPI', {
-        path: `s=${title}&page=${page}`,
-      })
-      const { Search } = await res.data
-      this.movies = Search
+    async fetchMovies({ title, page }: { title: string; page: number }) {
+      if (this.loading) return
+      this.loading = true
+      try {
+        const res = await axios.post('/api/fetchAPI', {
+          path: `s=${title}&page=${page}`,
+        })
+        const { Search } = await res.data
+        this.movies = Search
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
     },
     async fetchMovieInfo({ id, plot = 'full' }: { id: string; plot?: string }) {
-      const res = await axios.post('/api/fetchAPI', {
-        path: `i=${id}&plot=${plot}`,
-      })
-      this.movieInfo = await res.data
+      if (this.loading) return
+      this.loading = true
+      try {
+        const res = await axios.post('/api/fetchAPI', {
+          path: `i=${id}&plot=${plot}`,
+        })
+        this.movieInfo = await res.data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
     },
   },
 })

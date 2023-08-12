@@ -2,28 +2,32 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-import { useMovieStore } from '../store/movie.ts'
+import { useMovieStore } from '~/store/movie.ts'
+import TheLoader from '~/components/TheLoader.vue'
 import TheIcon from '~/components/TheIcon.vue'
 
+const fetchAPI = ref(false)
 const movieStore = useMovieStore()
 const route = useRoute()
 const router = useRouter()
 const info = ref<{
-  Poster?: string
-  Title?: string
-  Plot?: string
-  Runtime?: string
-  Director?: string
-  Actors?: string
-  Writer?: string
-  Genre?: string
-  Type?: string
+  Poster: string
+  Title: string
+  Plot: string
+  Runtime: string
+  Director: string
+  Actors: string
+  Writer: string
+  Genre: string
+  Type: string
 }>({})
 const emit = defineEmits(['closeModal'])
 
 async function fetchInfo() {
+  fetchAPI.value = true
   await movieStore.fetchMovieInfo({ id: String(route.query.jbv) })
   info.value = movieStore.movieInfo
+  fetchAPI.value = false
 }
 function offModal() {
   emit('closeModal')
@@ -39,7 +43,11 @@ fetchInfo()
       class="modal__background"
       @click="offModal"
     ></div>
-    <div class="modal__contents">
+    <TheLoader v-if="movieStore.loading && fetchAPI" />
+    <div
+      v-else
+      class="modal__contents"
+    >
       <img
         class="modal__contents--poster"
         :src="info.Poster"
@@ -105,6 +113,10 @@ fetchInfo()
     width: 100%;
     height: 100%;
     background-color: rgba(#000, 0.7);
+  }
+  :deep(.the-loader) {
+    position: absolute;
+    top: 50%;
   }
   &__contents {
     width: 100%;

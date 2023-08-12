@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainPage from './MainPage.vue'
-import AppContent from '../components/AppContent.vue'
-import NotFoundPage from './NotFoundPage.vue'
+import AppContent from '~/components/AppContent.vue'
+import MainPage from '~/routes/MainPage.vue'
+import NotFoundPage from '~/routes/NotFoundPage.vue'
 
 export default createRouter({
   history: createWebHistory(),

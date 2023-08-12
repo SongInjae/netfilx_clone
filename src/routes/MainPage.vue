@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppHeader from '../components/AppHeader.vue'
-import AppFooter from '../components/AppFooter.vue'
+import AppHeader from '~/components/AppHeader.vue'
+import AppFooter from '~/components/AppFooter.vue'
 </script>
 
 <template>
@@ -21,7 +21,7 @@ import AppFooter from '../components/AppFooter.vue'
 }
 .app {
   background-color: black;
-  .app__container {
+  &__container {
     max-width: 1280px;
     min-height: 100vh;
     margin: 0 auto;
@@ -30,6 +30,10 @@ import AppFooter from '../components/AppFooter.vue'
     gap: 30px;
     &--main {
       flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
