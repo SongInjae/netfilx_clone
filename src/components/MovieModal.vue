@@ -20,7 +20,17 @@ const info = ref<{
   Writer: string
   Genre: string
   Type: string
-}>({})
+}>({
+  Poster: '',
+  Title: '',
+  Plot: '',
+  Runtime: '',
+  Director: '',
+  Actors: '',
+  Writer: '',
+  Genre: '',
+  Type: '',
+})
 const emit = defineEmits(['closeModal'])
 
 async function fetchInfo() {
