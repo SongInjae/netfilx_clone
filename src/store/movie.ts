@@ -51,11 +51,11 @@ export const useMovieStore = defineStore('movie', {
     async fetchMovies({
       title,
       page,
-      check,
+      newFind,
     }: {
       title: string
       page: number
-      check: boolean
+      newFind: boolean
     }) {
       if (this.loading) return
       this.loading = true
@@ -63,7 +63,11 @@ export const useMovieStore = defineStore('movie', {
         const res = await axios.post('/api/fetchAPI', {
           path: `s=${title}&page=${page}`,
         })
-        const { Search } = await res.data
+        const { Search, totalResults } = await res.data
+        if (!totalResults) {
+          alert('검색결과가 없습니다.')
+          return
+        }
         if (!Search) {
           alert('마지막 페이지 입니다.')
           window.scrollTo({
@@ -72,7 +76,7 @@ export const useMovieStore = defineStore('movie', {
           })
           return
         }
-        if (check) this.movies = Search
+        if (newFind) this.movies = Search
         else this.movies = this.movies.concat(Search)
       } catch (error) {
         console.error(error)

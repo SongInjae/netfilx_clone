@@ -3,14 +3,10 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import { useMovieStore } from '~/store/movie.ts'
-import TheLoader from '~/components/TheLoader.vue'
+import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import TheIcon from '~/components/TheIcon.vue'
 
-const fetchAPI = ref(false)
-const movieStore = useMovieStore()
-const route = useRoute()
-const router = useRouter()
-const info = ref<{
+interface infoProps {
   Poster: string
   Title: string
   Plot: string
@@ -20,7 +16,13 @@ const info = ref<{
   Writer: string
   Genre: string
   Type: string
-}>({
+}
+
+const infoLoaded = ref(false)
+const movieStore = useMovieStore()
+const route = useRoute()
+const router = useRouter()
+const info = ref<infoProps>({
   Poster: '',
   Title: '',
   Plot: '',
@@ -34,10 +36,10 @@ const info = ref<{
 const emit = defineEmits(['closeModal'])
 
 async function fetchInfo() {
-  fetchAPI.value = true
+  infoLoaded.value = true
   await movieStore.fetchMovieInfo({ id: String(route.query.jbv) })
   info.value = movieStore.movieInfo
-  fetchAPI.value = false
+  infoLoaded.value = false
 }
 function offModal() {
   emit('closeModal')
@@ -53,12 +55,18 @@ fetchInfo()
       class="modal__background"
       @click="offModal"
     ></div>
-    <TheLoader v-if="movieStore.loading && fetchAPI" />
+    <LoadingSpinner v-if="movieStore.loading && infoLoaded" />
     <div
       v-else
       class="modal__contents"
     >
       <img
+        v-if="info.Poster === 'N/A'"
+        class="modal__contents--poster"
+        src="../assets/icon_movie.png"
+      />
+      <img
+        v-else
         class="modal__contents--poster"
         :src="info.Poster"
       />

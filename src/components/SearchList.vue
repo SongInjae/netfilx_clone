@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 import MovieModal from '~/components/MovieModal.vue'
 import { useMovieStore } from '~/store/movie.ts'
-import TheLoader from '~/components/TheLoader.vue'
+import LoadingSpinner from '~/components/LoadingSpinner.vue'
 
 const showModal = ref(false)
 const fetchLoading = ref(false)
@@ -14,12 +14,12 @@ const movieStore = useMovieStore()
 const router = useRouter()
 const route = useRoute()
 
-async function fetchAPI(check: boolean) {
+async function fetchAPI(newFind: boolean) {
   fetchLoading.value = true
   await movieStore.fetchMovies({
     title: String(route.query.q),
     page: page.value,
-    check,
+    newFind,
   })
   fetchLoading.value = false
 }
@@ -61,6 +61,13 @@ fetchAPI(true)
         :key="movie.imdbID"
       >
         <img
+          v-if="movie.Poster === 'N/A'"
+          class="content__grid--img"
+          src="../assets/icon_movie.png"
+          @click="goToMovieContent(movie.imdbID)"
+        />
+        <img
+          v-else:
           :src="movie.Poster"
           :alt="movie.Title"
           class="content__grid--img"
@@ -73,7 +80,7 @@ fetchAPI(true)
       @close-modal="showModal = false"
     />
   </div>
-  <TheLoader v-if="movieStore.loading && fetchLoading" />
+  <LoadingSpinner v-show="movieStore.loading && fetchLoading" />
 </template>
 
 <style lang="scss" scoped>
@@ -87,6 +94,8 @@ fetchAPI(true)
     gap: 5px;
     &--img {
       width: 240px;
+      height: 320px;
+      background-color: lightgray;
     }
   }
 }

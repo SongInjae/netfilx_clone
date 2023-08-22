@@ -1,3 +1,20 @@
+<script setup lang="ts">
+const menu = [
+  '화면 해설',
+  '고객 센터',
+  '기프트카드',
+  '미디어 센터',
+  '투자 정보(IR)',
+  '입사 정보',
+  '이용 약관',
+  '개인정보',
+  '법적 고지',
+  '쿠키 설정',
+  '회사 정보',
+  '문의하기',
+]
+</script>
+
 <template>
   <div class="footer">
     <div class="footer__sns">
@@ -19,18 +36,13 @@
       ></a>
     </div>
     <div class="footer__menu">
-      <div class="footer__menu--item">화면 해설</div>
-      <div class="footer__menu--item">고객 센터</div>
-      <div class="footer__menu--item">기프트카드</div>
-      <div class="footer__menu--item">미디어 센터</div>
-      <div class="footer__menu--item">투자 정보(IR)</div>
-      <div class="footer__menu--item">입사 정보</div>
-      <div class="footer__menu--item">이용 약관</div>
-      <div class="footer__menu--item">개인정보</div>
-      <div class="footer__menu--item">법적 고지</div>
-      <div class="footer__menu--item">쿠키 설정</div>
-      <div class="footer__menu--item">회사 정보</div>
-      <div class="footer__menu--item">문의하기</div>
+      <div
+        v-for="(menuItem, idx) in menu"
+        :key="idx"
+        class="footer__menu--item"
+      >
+        {{ menuItem }}
+      </div>
     </div>
     <div class="footer__code">
       <a

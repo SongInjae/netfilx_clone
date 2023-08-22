@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AppContent from '~/components/AppContent.vue'
+import SearchList from '~/components/SearchList.vue'
 import MainPage from '~/routes/MainPage.vue'
 import NotFoundPage from '~/routes/NotFoundPage.vue'
 
@@ -12,7 +12,7 @@ export default createRouter({
       children: [
         {
           path: '/search',
-          component: AppContent,
+          component: SearchList,
         },
       ],
     },
